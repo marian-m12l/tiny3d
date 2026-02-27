@@ -5,7 +5,7 @@
 
 #include "parser.h"
 
-Mat4 T3DM::parseNodeMatrix(const cgltf_node *node, bool recursive)
+Mat4 T3DM::parseNodeMatrix(const cgltf_node *node, const std::unordered_map<std::string, const T3DM::Bone*> *nodeMap)
 {
   Mat4 matScale{};
   if(node->has_scale)matScale.setScale({node->scale[0], node->scale[1], node->scale[2]});
@@ -25,9 +25,13 @@ Mat4 T3DM::parseNodeMatrix(const cgltf_node *node, bool recursive)
 
   Mat4 res = matTrans * matRot * matScale;
 
-  if(recursive && node->parent) {
-    auto parentMat = parseNodeMatrix(node->parent, recursive);
-    res = parentMat * res;
+  if(nodeMap != nullptr && node->parent) {
+    // Do not recurse above the skin's root bone
+    auto it = nodeMap->find(node->parent->name);
+    if(it != nodeMap->end()) {
+      auto parentMat = parseNodeMatrix(node->parent, nodeMap);
+      res = parentMat * res;
+    }
   }
 
   // remove very small values (underflow issues & '-0' values)

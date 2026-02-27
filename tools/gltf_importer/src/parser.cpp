@@ -99,11 +99,12 @@ T3DM::T3DMData T3DM::parseGLTF(const char *gltfPath)
         }
         p = p->parent;
       }
-      if (ancestorHasTransforms) {
+      /*if (ancestorHasTransforms) {
         throw std::runtime_error("At least one ancestor of armature/skin root bone has transforms!");
-      }
+      }*/
 
-      Bone armature = parseBoneTree(bone, nullptr, boneCount);
+
+      Bone armature = parseBoneTree(bone, nullptr, boneCount, &skin);
 
       //printBoneTree(armature, 0);
       t3dm.skeletons.push_back(armature);
@@ -311,7 +312,7 @@ T3DM::T3DMData T3DM::parseGLTF(const char *gltfPath)
       if(texSizeY == 0)texSizeY = 32;
 
       // convert vertices
-      Mat4 mat = config.ignoreTransforms ? Mat4{} : parseNodeMatrix(node, true);
+      Mat4 mat = config.ignoreTransforms ? Mat4{} : parseNodeMatrix(node, &boneMap);
       for(int k = 0; k < vertices.size(); k++) {
         convertVertex(
           config.globalScale, texSizeX, texSizeY, vertices[k], verticesT3D[k],

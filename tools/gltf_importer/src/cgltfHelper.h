@@ -164,6 +164,35 @@ namespace Gltf
     return result;
   }
 
+  inline Mat4 readAsMat4(const uint8_t* data, cgltf_type type, cgltf_component_type compType) {
+    Mat4 result{};
+    switch(type) {
+      case cgltf_type_mat4: {
+        result[0][0] = readAsFloat(data, compType);
+        result[0][1] = readAsFloat(data + getDataSize(compType), compType);
+        result[0][2] = readAsFloat(data + getDataSize(compType) * 2, compType);
+        result[0][3] = readAsFloat(data + getDataSize(compType) * 3, compType);
+        result[1][0] = readAsFloat(data + getDataSize(compType) * 4, compType);
+        result[1][1] = readAsFloat(data + getDataSize(compType) * 5, compType);
+        result[1][2] = readAsFloat(data + getDataSize(compType) * 6, compType);
+        result[1][3] = readAsFloat(data + getDataSize(compType) * 7, compType);
+        result[2][0] = readAsFloat(data + getDataSize(compType) * 8, compType);
+        result[2][1] = readAsFloat(data + getDataSize(compType) * 9, compType);
+        result[2][2] = readAsFloat(data + getDataSize(compType) * 10, compType);
+        result[2][3] = readAsFloat(data + getDataSize(compType) * 11, compType);
+        result[3][0] = readAsFloat(data + getDataSize(compType) * 12, compType);
+        result[3][1] = readAsFloat(data + getDataSize(compType) * 13, compType);
+        result[3][2] = readAsFloat(data + getDataSize(compType) * 14, compType);
+        result[3][3] = readAsFloat(data + getDataSize(compType) * 15, compType);
+        break;
+      }
+      default:
+        printf("Unsupported type: %s (%d)\n", getTypeString(type), type);
+        throw std::runtime_error("Unsupported type");
+    }
+    return result;
+  }
+
   inline uint32_t readAsU32(uint8_t* data, cgltf_component_type type) {
     switch(type) {
       case cgltf_component_type_r_8: return (uint32_t)(*(int8_t*)data);
