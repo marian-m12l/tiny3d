@@ -99,16 +99,16 @@ T3DM::T3DMData T3DM::parseGLTF(const char *gltfPath)
             for (int y=0; y<4; y++) {
               for (int x=0; x<4; x++) {
                 float reference = x==y ? 1 : 0;
-                if (fabs(p->matrix[y*4+x] - reference) > EPSILON) {
+                if (fabs(p->matrix[y+x*4] - reference) > EPSILON) {
                   ancestorHasTransforms = true;
                 }
               }
             }
             if(config.verbose)  printf("m: %f %f %f %f\n   %f %f %f %f\n   %f %f %f %f\n   %f %f %f %f\n",
-              p->matrix[0], p->matrix[1], p->matrix[2], p->matrix[3],
-              p->matrix[4], p->matrix[5], p->matrix[6], p->matrix[7],
-              p->matrix[8], p->matrix[9], p->matrix[10], p->matrix[11],
-              p->matrix[12], p->matrix[13], p->matrix[14], p->matrix[15]
+              p->matrix[0], p->matrix[4], p->matrix[8], p->matrix[12],
+              p->matrix[1], p->matrix[5], p->matrix[9], p->matrix[13],
+              p->matrix[2], p->matrix[6], p->matrix[10], p->matrix[14],
+              p->matrix[3], p->matrix[7], p->matrix[11], p->matrix[15]
             );
           }
         }
